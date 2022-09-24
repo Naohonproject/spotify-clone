@@ -1,3 +1,4 @@
+import { Session } from "inspector";
 import { User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
@@ -11,4 +12,17 @@ export interface ExtendedToken extends JWT {
   accessTokenExpireAt: number;
   user: User;
   error?: TokenError;
+}
+
+export interface ExtendedSession extends Session {
+  accessToken: ExtendedToken["accessToken"];
+  error: ExtendedToken["error"];
+}
+
+export interface PlaylistContextState {
+  playlist: any[];
+}
+
+export interface IPlayListContext {
+  playlistContextState: PlaylistContextState;
 }
