@@ -3,6 +3,9 @@ import SpotifyProvider from "next-auth/providers/spotify";
 import { scopes, spotifyApi } from "../../../config/spotify";
 import { ExtendedToken, TokenError } from "../../../types";
 
+// our app will go into this api to make authenticate our app with spotify
+
+// function to refresh access token if access token expire
 const refreshAccessToken = async (
   token: ExtendedToken
 ): Promise<ExtendedToken> => {
@@ -14,7 +17,7 @@ const refreshAccessToken = async (
     const { body: refreshedAccessToken } =
       await spotifyApi.refreshAccessToken();
 
-    // after let spotifyApi refresh the token success fully, we receive the received refreshedAccessToken
+    // after let spotifyApi refresh the token successfully, we receive the refreshedAccessToken
     // return the updated access token from spotify
     return {
       ...token,
@@ -60,8 +63,8 @@ const jwtCallback: CallbacksOptions["jwt"] = async ({
     return token;
   }
 
-  // not go into the if block above , means not first time sign-in , and
-  // access token expired, return the access refreshed access token
+  // not go into the if blocks above , means not first time sign-in , and
+  // access token not expired, return the access refreshed access token
   return await refreshAccessToken(token as ExtendedToken);
   // access token has expired,refresh it
 };

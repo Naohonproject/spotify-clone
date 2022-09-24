@@ -11,7 +11,7 @@ export const middleware = async (request: NextRequest) => {
   // will always set for secret option, then when we sign in successfully, Spotify will use our  process.env.NEXTAUTH_SECRET to make a token
   // send to client, client store it in cookie or Authorization header, we use getToken then pass to it our secret to decode the token from the client
 
-  // take the tokent from user request
+  // take the token from user request
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
