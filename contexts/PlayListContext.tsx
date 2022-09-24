@@ -10,10 +10,15 @@ import useSpotify from "../hooks/useSpotify";
 
 import { IPlayListContext, PlaylistContextState } from "../types";
 
-const defaultPlayListContextState: PlaylistContextState = { playlist: [] };
+const defaultPlayListContextState: PlaylistContextState = {
+  playlists: [],
+  selectedPlaylistId: null,
+  selectedPlaylist: null,
+};
 
 export const PlaylistContext = createContext<IPlayListContext>({
   playlistContextState: defaultPlayListContextState,
+  updatePlaylistContextState: () => {},
 });
 
 // this is custom hook that return the data of context returned by useContext(PlaylistContext)
@@ -30,6 +35,15 @@ const PlayListContextProvider = ({ children }: { children: ReactNode }) => {
     defaultPlayListContextState
   );
 
+  const updatePlaylistContextState = (
+    updatedObj: Partial<PlaylistContextState>
+  ) => {
+    setPlaylistContextState((previousPlaylistContextState) => ({
+      ...previousPlaylistContextState,
+      ...updatedObj,
+    }));
+  };
+
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
 
@@ -38,8 +52,11 @@ const PlayListContextProvider = ({ children }: { children: ReactNode }) => {
     // set playListContextState again
     const getUserPlaylist = async () => {
       const userPlayListResponse = await spotifyApi.getUserPlaylists();
-      setPlaylistContextState({ playlist: userPlayListResponse.body.items });
+      updatePlaylistContextState({
+        playlists: userPlayListResponse.body.items,
+      });
     };
+
     if (spotifyApi.getAccessToken()) {
       getUserPlaylist();
     }
@@ -47,6 +64,7 @@ const PlayListContextProvider = ({ children }: { children: ReactNode }) => {
 
   const playListContextProviderData = {
     playlistContextState,
+    updatePlaylistContextState,
   };
   return (
     <PlaylistContext.Provider value={playListContextProviderData}>
