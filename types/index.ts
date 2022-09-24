@@ -31,3 +31,15 @@ export interface IPlayListContext {
     updatedObj: Partial<PlaylistContextState>
   ) => void;
 }
+
+export interface SongContextState {
+  selectedPlaylistId?: string;
+  selectedSong: any | null;
+  isPlaying: boolean;
+  volume: number;
+  deviceId: string | null;
+}
+
+export interface ISongContext {
+  songContextState: SongContextState;
+}
