@@ -1,6 +1,7 @@
 import { Session } from "inspector";
 import { User } from "next-auth";
 import { JWT } from "next-auth/jwt";
+import { Dispatch } from "react";
 
 export enum TokenError {
   RefreshAccessTokenError = "RefreshAccessTokenError",
@@ -33,8 +34,8 @@ export interface IPlayListContext {
 }
 
 export interface SongContextState {
-  selectedPlaylistId?: string;
-  selectedSong: any | null;
+  selectedSongId?: string;
+  selectedSong: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObject | null;
   isPlaying: boolean;
   volume: number;
   deviceId: string | null;
@@ -42,4 +43,28 @@ export interface SongContextState {
 
 export interface ISongContext {
   songContextState: SongContextState;
+  dispatchSongAction: Dispatch<SongReducerAction>;
 }
+
+export enum SongReducerActionType {
+  SetDevice = "SetDevice",
+  ToggleIsPlaying = "ToggleIsPlaying",
+  SetCurrentPlayingSong = "SetCurrentPlayingSong",
+}
+
+export type SongReducerAction =
+  | {
+      type: SongReducerActionType.SetDevice;
+      payload: Pick<SongContextState, "deviceId" | "volume">;
+    }
+  | {
+      type: SongReducerActionType.ToggleIsPlaying;
+      payload: boolean;
+    }
+  | {
+      type: SongReducerActionType.SetCurrentPlayingSong;
+      payload: Pick<
+        SongContextState,
+        "selectedSongId" | "selectedSong" | "isPlaying"
+      >;
+    };
